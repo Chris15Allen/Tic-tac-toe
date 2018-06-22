@@ -1,8 +1,9 @@
-var currentPLayer = "X";
-var currentPLayer = "O";
+var currentPlayer = "X";
+var nextPlayer = "O";
 
 var playerXSelections = new Array();
 var playerOSelections = new Array();
+
 
 const winningCombinations = [
     [1, 2, 3],
@@ -13,14 +14,82 @@ const winningCombinations = [
     [3, 6, 9],
     [1, 5, 9],
     [3, 5, 7]
-    ]
+  ]
 
-    handleClick = function(event) {
-        var cell = event.target
-        console.log(cell.id);
-      }
-      
-      var cells = document.querySelectorAll("td");
-      
-      for(var i = 0; i < cells.length; i++) {
-        cells[i].addEventListener('click', handleClick)
+  
+
+  
+  handleClick = function(event) {
+    var cell = event.target;
+
+    cell.innerHTML = currentPlayer;
+  
+
+    if(currentPlayer === "X" ) {
+    playerSelections = playerXSelections;
+    nextPlayer = "O";
+  } else {
+    playerSelections = playerOSelections;
+    nextPlayer = "X";
+  }
+
+  playerSelections.push(parseInt(cell.id));
+  
+    if(checkWinner(playerSelections)) {
+      alert("Player " + currentPlayer + " wins!")
+      resetGame();
+    }
+  
+    if(checkDraw()) {
+      alert("Draw!");
+      resetGame();
+    }
+  
+  // Swap players
+  currentPlayer = nextPlayer;
+}
+  
+ var cells = document.querySelectorAll("td");
+  
+  for(var i = 0; i < cells.length; i++) {
+    cells[i].addEventListener('click', handleClick)
+
+  }
+
+
+
+
+  function checkWinner() { 
+      console.log("hello")
+    for (var i = 0; i < winningCombinations.length; i++ ){
+        matches = 0
+        for (var j = 0; j < winningCombinations[i].length;j++) {
+            if(playerSelections.includes(winningCombinations[i][j])) {
+                matches++
+            }
+            
+            if (matches == 3){
+            return true 
+            }
+        }  
+     }
+  }
+  
+  
+  
+  
+  function checkDraw() {
+    return playerOSelections.length + playerXSelections.length >= cells.length
+  } 
+
+
+  
+  function resetGame() {
+    playerXSelections = new Array();
+    playerOSelections = new Array();
+    for(var i = 0; i < cells.length; i++) {
+      cells[i].innerHTML = ""
+    }
+  }
+ 
+
